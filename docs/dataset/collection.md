@@ -96,7 +96,7 @@ Guide2Research是一个相对权威的评级网站，对各个大学、全球的
 
 但其实对于每个期刊的详细页面还对这个期刊有相对较为详细的描述与可视化，具体详见该网站。
 
-## 2.1 期刊排名信息
+## 2.2 会议排名信息
 
 计算机科学最佳会议排名来自此网站[https://research.com/conference-rankings/computer-science](https://research.com/conference-rankings/computer-science)，排名由 Research.com 发布，该网站是计算机科学研究的著名网站之一，自 2014 年以来提供有关科学贡献的可靠数据。
 
@@ -159,9 +159,9 @@ CORE是澳大利亚计算研究和教育协会发布的评级指标，会议排�
 
 ## 7. Conference Accepted Rate
 
-数据主要来源于[https://github.com/lixin4ever/Conference-Acceptance-Rate](https://github.com/lixin4ever/Conference-Acceptance-Rate)与(https://github.com/ccfddl/ccf-deadlines)[https://github.com/ccfddl/ccf-deadlines]两个仓库，前者主要以Markdown表格的形式存储，并且有一定可视化如下图
+数据主要来源于[https://github.com/lixin4ever/Conference-Acceptance-Rate](https://github.com/lixin4ever/Conference-Acceptance-Rate)与[https://github.com/ccfddl/ccf-deadlines](https://github.com/ccfddl/ccf-deadlines)两个仓库，前者主要以Markdown表格的形式存储，并且有一定可视化如下图
 
-![](./fig/conference_trends.png)
+![](fig/conference_trends.png)
 
 后者以由网友整理成相对规整的`yaml`数据，以ICML为例，其数据格式如下：
 

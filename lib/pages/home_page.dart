@@ -1,41 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:pubmate/auth/auth_service.dart';
+import 'package:pubmate/widgets/custom_drawer.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-
-  // get auth service
-  final authService = AuthService();
-
-  // logout button pressed
-  void logout() async {
-    await authService.signOut();
+  // Helper method to navigate to a named route
+  void navigateTo(BuildContext context, String routeName) {
+    Navigator.pushNamed(context, routeName);
   }
 
   @override
   Widget build(BuildContext context) {
-
-    // get user email
-    final currentUserEmail = authService.getCurrentUserEmail();
-
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Home Page')),
-        actions: [
-          // logout button
-          IconButton(
-            onPressed: logout,
-            icon: const Icon(Icons.logout),
-          ),
-        ],
+        title: const Text('Home Page'),
       ),
-      body: Center(child: Text(currentUserEmail.toString())),
+      drawer: const SizedBox(
+        width: 240,
+        child: CustomDrawer()
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.count(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          children: [
+            ElevatedButton(
+              onPressed: () => navigateTo(context, '/conference_deadlines'),
+              child: const Text('Conference Deadlines'),
+            ),
+            ElevatedButton(
+              onPressed: () => navigateTo(context, '/journals'),
+              child: const Text('Journals'),
+            ),
+            ElevatedButton(
+              onPressed: () => navigateTo(context, '/g2r_conferences'),
+              child: const Text('Guide2Research Conferences'),
+            ),
+            ElevatedButton(
+              onPressed: () => navigateTo(context, '/g2r_journals'),
+              child: const Text('Guide2Research Journals'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
