@@ -17,62 +17,97 @@ class CustomDrawer extends StatelessWidget {
     }
 
     return Drawer(
-      child: Column(
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(color: Colors.purple),
-            accountName: null,
-            accountEmail: Text(currentUserEmail),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Text(
-                currentUserEmail[0].toUpperCase(), // Display first letter of email
-                style: const TextStyle(fontSize: 40, color: Colors.purple),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.grey.shade100, Colors.grey.shade300],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Column(
+          children: [
+            // User Account Header
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.purple.shade700, Colors.purple.shade300],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              accountName: null,
+              accountEmail: Text(
+                currentUserEmail,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Text(
+                  currentUserEmail[0].toUpperCase(), // Display first letter of email
+                  style: const TextStyle(fontSize: 40, color: Colors.purple),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                ListTile(
-                  title: const Text("Conference Deadlines"),
-                  onTap: () {
-                    Navigator.pop(context); // Close the drawer
-                    Navigator.pushNamed(context, '/conference_deadlines');
-                  },
-                ),
-                ListTile(
-                  title: const Text("Journals"),
-                  onTap: () {
-                    Navigator.pop(context); // Close the drawer
-                    Navigator.pushNamed(context, '/journals');
-                  },
-                ),
-                ListTile(
-                  title: const Text("Guide2Research Conf"),
-                  onTap: () {
-                    Navigator.pop(context); // Close the drawer
-                    Navigator.pushNamed(context, '/g2r_conferences');
-                  },
-                ),
-                ListTile(
-                  title: const Text("Guide2Research Jour"),
-                  onTap: () {
-                    Navigator.pop(context); // Close the drawer
-                    Navigator.pushNamed(context, '/g2r_journals');
-                  },
-                ),
-              ],
+
+            // Expanded List for Menu Items
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildListTile(context, "Conference Deadlines", '/conference_deadlines'),
+                  _buildListTile(context, "Journals", '/journals'),
+                  _buildListTile(context, "Guide2Research Conf", '/g2r_conferences'),
+                  _buildListTile(context, "Guide2Research Journ", '/g2r_journals'),
+                ],
+              ),
             ),
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text("Logout"),
-            trailing: const Icon(Icons.logout),
-            onTap: logout, // Call logout logic
-          ),
-        ],
+
+            // Divider with custom styling
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+              indent: 20,
+              endIndent: 20,
+            ),
+
+            // Logout Button
+            ListTile(
+              title: const Text(
+                "Logout",
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              trailing: const Icon(Icons.logout, color: Colors.redAccent),
+              onTap: logout, // Call logout logic
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  // Helper function to create a ListTile without extra background for menu items
+  Widget _buildListTile(BuildContext context, String title, String routeName) {
+    return ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Colors.black87,
+        ),
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      onTap: () {
+        Navigator.pop(context); // Close the drawer
+        Navigator.pushNamed(context, routeName);
+      },
     );
   }
 }

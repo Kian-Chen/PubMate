@@ -8,7 +8,7 @@ class G2RJournalsPage extends StatelessWidget {
     // Placeholder content
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Guide2Research Journals'),
+        title: const Text('Journals Ranking'),
       ),
       body: const Center(
         child: Text('Guide2Research Journals Content'),

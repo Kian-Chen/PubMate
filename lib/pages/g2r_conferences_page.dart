@@ -8,7 +8,7 @@ class G2RConferencesPage extends StatelessWidget {
     // Placeholder content
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Guide2Research Conferences'),
+        title: const Text('Conferences Ranking'),
       ),
       body: const Center(
         child: Text('Guide2Research Conferences Content'),
