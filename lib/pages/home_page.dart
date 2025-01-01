@@ -1,12 +1,64 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pubmate/widgets/custom_drawer.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // Timer for updating the progress every second
+  late Timer _timer;
+
+  // Current progress value (between 0 and 1)
+  double _progress = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Start the timer that updates the progress every second
+    _startProgressTimer();
+  }
+
+  @override
+  void dispose() {
+    // Don't forget to cancel the timer when the widget is disposed
+    _timer.cancel();
+    super.dispose();
+  }
 
   // Helper method to navigate to a named route
   void navigateTo(BuildContext context, String routeName) {
     Navigator.pushNamed(context, routeName);
+  }
+
+  // Start the timer to update the progress every second
+  void _startProgressTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        _progress = _getYearProgress();
+      });
+    });
+  }
+
+  // Helper method to calculate the progress of the current year in seconds
+  double _getYearProgress() {
+    DateTime now = DateTime.now().toLocal(); // Local time with time zone
+    DateTime startOfYear = DateTime(now.year, 1, 1); // Start of the year in local time
+    DateTime endOfYear = DateTime(now.year + 1, 1, 1); // Start of next year in local time
+
+    // Calculate the total number of seconds in the year
+    int totalSecondsInYear = endOfYear.difference(startOfYear).inSeconds;
+
+    // Calculate the number of seconds passed in the current year
+    int secondsPassed = now.difference(startOfYear).inSeconds;
+
+    // Return the ratio of seconds passed to total seconds, with 5 decimal precision
+    return secondsPassed / totalSecondsInYear;
   }
 
   @override
@@ -80,6 +132,10 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 30),
+
+            // Year Progress Bar
+            _buildYearProgressBar(context),
           ],
         ),
       ),
@@ -149,6 +205,60 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // Year Progress Bar Widget
+  Widget _buildYearProgressBar(BuildContext context) {
+    // We will calculate the progress for the current year and format it to 5 decimal places
+    double progress = _progress;
+
+    return Column(
+      children: [
+        const Text(
+          'Progress of the Year:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black54,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        const SizedBox(height: 10),
+        Stack(
+          children: [
+            Container(
+              height: 10,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.grey.shade300,
+              ),
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              height: 10,
+              width: MediaQuery.of(context).size.width * progress, // Dynamic width
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                gradient: const LinearGradient(
+                  colors: [Colors.blue, Colors.green],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Text(
+          '${(progress * 100).toStringAsFixed(5)}% of the year has passed.',
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.black54,
+            fontFamily: 'Poppins',
+          ),
+        ),
+      ],
     );
   }
 }
