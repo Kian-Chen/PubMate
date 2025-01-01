@@ -1,38 +1,72 @@
 import 'package:flutter/material.dart';
+import '../api/db_service.dart';
+import '../models/journal_models.dart';
 
-class JournalsPage extends StatelessWidget {
+class JournalsPage extends StatefulWidget {
   const JournalsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Example list of journals; in a real app, this might come from a database
-    final List<Map<String, dynamic>> journals = [
-      {'name': 'Journal X', 'id': 512},
-      {'name': 'Journal Y', 'id': 513},
-      // Add more journals as needed
-    ];
+  State<JournalsPage> createState() => _JournalsPageState();
+}
 
+class _JournalsPageState extends State<JournalsPage> {
+  final DBService _dbService = DBService();
+
+  late Future<List<JournalInfo>> _futureAllJournalInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureAllJournalInfo = _dbService.getAllJournalInfo();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Journals'),
       ),
-      body: ListView.builder(
-        itemCount: journals.length,
-        itemBuilder: (context, index) {
-          final journal = journals[index];
-          return ListTile(
-            title: Text(journal['name']),
-            trailing: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/journal_details',
-                  arguments: {'id': journal['id']},
+      body: FutureBuilder<List<JournalInfo>>(
+        future: _futureAllJournalInfo,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('No Journal Data Found.'),
+            );
+          } else {
+            final journals = snapshot.data!;
+            return ListView.builder(
+              itemCount: journals.length,
+              itemBuilder: (context, index) {
+                final journal = journals[index];
+                return ListTile(
+                  title: Text(journal.name),
+                  subtitle: Text('ISSN: ${journal.issn ?? 'N/A'}'),
+                  trailing: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/journal_details',
+                        arguments: {'name': journal.name},
+                      );
+                    },
+                    child: const Text('Details'),
+                  ),
                 );
               },
-              child: const Text('Details'),
-            ),
-          );
+            );
+          }
         },
       ),
     );

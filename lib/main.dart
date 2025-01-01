@@ -50,12 +50,12 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/conference_details') {
           if (settings.arguments != null &&
               settings.arguments is Map<String, dynamic> &&
-              (settings.arguments as Map<String, dynamic>).containsKey('id')) {
+              (settings.arguments as Map<String, dynamic>).containsKey('abbr')) {
             final args = settings.arguments as Map<String, dynamic>;
-            final id = args['id'];
-            if (id is int) {
+            final abbr = args['abbr'];
+            if (abbr is String) {
               return MaterialPageRoute(
-                builder: (context) => ConferenceDetailsPage(id: id),
+                builder: (context) => ConferenceDetailsPage(abbr: abbr),
               );
             } else {
               // Handle incorrect type
@@ -68,12 +68,12 @@ class MyApp extends StatelessWidget {
         } else if (settings.name == '/journal_details') {
           if (settings.arguments != null &&
               settings.arguments is Map<String, dynamic> &&
-              (settings.arguments as Map<String, dynamic>).containsKey('id')) {
+              (settings.arguments as Map<String, dynamic>).containsKey('name')) {
             final args = settings.arguments as Map<String, dynamic>;
-            final id = args['id'];
-            if (id is int) {
+            final name = args['name'];
+            if (name is String) {
               return MaterialPageRoute(
-                builder: (context) => JournalDetailsPage(id: id),
+                builder: (context) => JournalDetailsPage(name: name),
               );
             } else {
               // Handle incorrect type

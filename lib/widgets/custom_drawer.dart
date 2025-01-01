@@ -61,7 +61,7 @@ class CustomDrawer extends StatelessWidget {
                   _buildListTile(context, "Conference Deadlines", '/conference_deadlines'),
                   _buildListTile(context, "Journals", '/journals'),
                   _buildListTile(context, "Guide2Research Conf", '/g2r_conferences'),
-                  _buildListTile(context, "Guide2Research Journ", '/g2r_journals'),
+                  _buildListTile(context, "Guide2Research Jour", '/g2r_journals'),
                 ],
               ),
             ),
