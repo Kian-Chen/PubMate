@@ -1,9 +1,6 @@
-// lib/pages/G2RJournalsPage.dart
-
 import 'package:flutter/material.dart';
 import '../api/db_service.dart';
 import '../models/ranking_models.dart';
-
 
 class G2RJournalsPage extends StatefulWidget {
   const G2RJournalsPage({super.key});
@@ -16,12 +13,23 @@ class _G2RJournalsPageState extends State<G2RJournalsPage> {
   final DBService _dbService = DBService();
 
   late Future<List<G2RJournalRanking>> _futureG2RJournalRankings;
+  List<G2RJournalRanking> _filteredRankings = [];
+  String _searchQuery = "";
 
   @override
   void initState() {
     super.initState();
-
     _futureG2RJournalRankings = _dbService.getG2RJournalRankings();
+  }
+
+  void _filterJournals(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filteredRankings = _filteredRankings.where((ranking) {
+        return ranking.journalName.toLowerCase().contains(query.toLowerCase()) ||
+            (ranking.issn != null && ranking.issn!.toLowerCase().contains(query.toLowerCase()));
+      }).toList();
+    });
   }
 
   @override
@@ -30,35 +38,42 @@ class _G2RJournalsPageState extends State<G2RJournalsPage> {
       appBar: AppBar(
         title: const Text('G2R Journal Rankings'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            FutureBuilder<List<G2RJournalRanking>>(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (query) {
+                _filterJournals(query);
+              },
+              decoration: InputDecoration(
+                labelText: 'Search Journals',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                prefixIcon: const Icon(Icons.search),
+              ),
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<G2RJournalRanking>>(
               future: _futureG2RJournalRankings,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Error: ${snapshot.error}'),
-                  );
+                  return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('No G2R Journal Ranking Data Found.'),
-                  );
+                  return const Center(child: Text('No G2R Journal Ranking Data Found.'));
                 } else {
                   final rankings = snapshot.data!;
+                  if (_searchQuery.isEmpty) {
+                    _filteredRankings = rankings;
+                  }
                   return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: rankings.length,
+                    itemCount: _filteredRankings.length,
                     itemBuilder: (context, index) {
-                      final ranking = rankings[index];
+                      final ranking = _filteredRankings[index];
                       return ListTile(
                         title: Text(ranking.journalName),
                         subtitle: Text(
@@ -80,9 +95,8 @@ class _G2RJournalsPageState extends State<G2RJournalsPage> {
                 }
               },
             ),
-            const SizedBox(height: 20),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -73,7 +73,7 @@ class DBService {
     }
 
     // Convert map to list
-    return conferenceMap.values.map((group) => group.toConferenceYearInfo()).toList().sublist(0, 30);
+    return conferenceMap.values.map((group) => group.toConferenceYearInfo()).toList();
   }
 
   /// 2. 获取特定会议的详细信息
@@ -150,7 +150,7 @@ class DBService {
       throw Exception('Error in getG2RConferenceRankings: $response');
     }
 
-    return (response as List).sublist(0, 100)
+    return (response as List)
         .map((json) => G2RConferenceRanking.fromJson(json))
         .toList();
   }
@@ -235,7 +235,7 @@ class DBService {
       throw Exception('Error in getG2RJournalRankings: $response');
     }
 
-    return (response as List).sublist(0, 100)
+    return (response as List)
         .map((json) => G2RJournalRanking.fromJson(json))
         .toList();
   }
