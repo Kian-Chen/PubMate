@@ -105,3 +105,210 @@ erDiagram
     Journal ||--o{ Journal_Evaluation : "evaluated as"
     Journal ||--o{ G2R_JournalRanking : "ranked in"
 ```
+
+# 数据库视图设计
+
+```mermaid
+erDiagram
+    CONFERENCE {
+        int conference_id PK
+        string name
+        string short_name
+        string link
+        string place
+        string timezone
+        date start_date
+        date end_date
+        int year
+    }
+    ACCEPTANCE_RATE {
+        int conference_id PK
+        int year PK
+        int accepted
+        int submitted
+        float rate
+        string description
+        string source
+    }
+    CONFERENCE_RATING {
+        int conference_id PK
+        string rating_system PK
+        float rating
+    }
+    CONFERENCE_SUBFIELD {
+        int conference_id PK
+        string sub
+    }
+    CONFERENCE_DEADLINE {
+        int conference_id PK
+        string deadline_type
+        date deadline_time
+        string comment
+    }
+    G2R_CONFERENCE_RANKING {
+        int ranking_id PK
+        int conference_id
+        int ranking_position
+        float score
+    }
+
+    JOURNAL {
+        int journal_id PK
+        string name
+        string issn
+        string url
+    }
+    JOURNAL_CAS_INFO {
+        int journal_id PK
+        string cas_partition
+        string cas_major_category
+        string cas_minor_category
+    }
+    JOURNAL_SUBFIELD {
+        int journal_id PK
+        string sub
+    }
+    JOURNAL_RATING {
+        int journal_id PK
+        string rating_system
+        float rating
+    }
+    JOURNAL_EVALUATION {
+        int journal_id PK
+        string review_cycle
+        string acceptance_difficulty
+        int h_index
+        float cite_score
+        string jcr
+        float impact_factor
+        string best_scientists
+        int documents
+    }
+    G2R_JOURNAL_RANKING {
+        int ranking_id PK
+        int journal_id
+        int ranking_position
+        float score
+    }
+
+    CONFERENCE ||--o| ACCEPTANCE_RATE : has
+    CONFERENCE ||--o| CONFERENCE_RATING : has
+    CONFERENCE ||--o| CONFERENCE_SUBFIELD : has
+    CONFERENCE ||--o| CONFERENCE_DEADLINE : has
+    CONFERENCE ||--o| G2R_CONFERENCE_RANKING : ranked_in
+
+    JOURNAL ||--o| JOURNAL_CAS_INFO : has
+    JOURNAL ||--o| JOURNAL_SUBFIELD : has
+    JOURNAL ||--o| JOURNAL_RATING : rated_by
+    JOURNAL ||--o| JOURNAL_EVALUATION : evaluated_by
+    JOURNAL ||--o| G2R_JOURNAL_RANKING : ranked_in
+
+    view_conference_deadline_info {
+        int conference_id
+        string conference_name
+        string short_name
+        string link
+        string place
+        string timezone
+        date start_date
+        date end_date
+        int year
+        int accepted
+        int submitted
+        float rate
+        string rate_description
+        string rate_source
+        float CCF_rating
+        float TH_CPL_rating
+        float CORE_rating
+        string subfield
+        string deadline_type
+        date deadline_time
+        string deadline_comment
+    }
+    view_conference_detail {
+        int conference_id
+        string short_name
+        string full_name
+        float CCF_rating
+        float TH_CPL_rating
+        float CORE_rating
+        int year
+        date start_date
+        date end_date
+        string place
+        string link
+        string subfield
+        int accepted
+        int submitted
+        float rate
+        string rate_description
+        string rate_source
+        string deadline_type
+        date deadline_time
+        string deadline_comment
+    }
+    view_g2r_conference_rankings {
+        int ranking_id
+        int conference_id
+        string conference_name
+        string short_name
+        int ranking_position
+        float score
+    }
+    view_journal_info {
+        int journal_id
+        string name
+        string issn
+        string url
+        string cas_partition
+        string cas_major_category
+        string cas_minor_category
+        string subfield
+        string rating_system
+        float rating
+        string review_cycle
+        string acceptance_difficulty
+        int h_index
+        float cite_score
+        string jcr
+        float impact_factor
+        string best_scientists
+        int documents
+    }
+    view_journal_detail {
+        int journal_id
+        string journal_name
+        string issn
+        string url
+        string cas_partition
+        string cas_major_category
+        string cas_minor_category
+        string subfield
+        string rating_system
+        float rating
+        string review_cycle
+        string acceptance_difficulty
+        int h_index
+        float cite_score
+        string jcr
+        float impact_factor
+        string best_scientists
+        int documents
+    }
+    view_g2r_journal_rankings {
+        int ranking_id
+        int journal_id
+        string journal_name
+        string issn
+        int ranking_position
+        float score
+    }
+
+    view_conference_deadline_info ||--o| CONFERENCE : includes
+    view_conference_detail ||--o| CONFERENCE : includes
+    view_g2r_conference_rankings ||--o| G2R_CONFERENCE_RANKING : based_on
+    view_journal_info ||--o| JOURNAL : based_on
+    view_journal_detail ||--o| JOURNAL : based_on
+    view_g2r_journal_rankings ||--o| G2R_JOURNAL_RANKING : based_on
+```
