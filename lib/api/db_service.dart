@@ -17,10 +17,6 @@ class DBService {
         'conference_id, conference_name, short_name, link, place, timezone, start_date, end_date, year, accepted, submitted, rate, rate_description, rate_source, ccf_rating, th_cpl_rating, core_rating, subfield, deadline_type, deadline_time, deadline_comment')
         .order('conference_id', ascending: true);
 
-    if (response == null) {
-      throw Exception('Error in getConferenceDeadlineInfo: $response');
-    }
-
     // Map to a list of ConferenceDeadlineInfo
     final data = (response as List)
         .map((json) => ConferenceDeadlineInfo.fromJson(json))
@@ -86,10 +82,6 @@ class DBService {
         .eq('short_name', shortName)
         .order('year', ascending: false);
 
-    if (response == null) {
-      throw Exception('Error in getConferenceDetailByShortName: $response');
-    }
-
     final data = (response as List)
         .map((json) => ConferenceDetail.fromJson(json))
         .toList();
@@ -146,10 +138,6 @@ class DBService {
         'ranking_id, conference_id, conference_name, short_name, ranking_position, score')
         .order('ranking_position', ascending: true);
 
-    if (response == null) {
-      throw Exception('Error in getG2RConferenceRankings: $response');
-    }
-
     return (response as List)
         .map((json) => G2RConferenceRanking.fromJson(json))
         .toList();
@@ -164,10 +152,6 @@ class DBService {
         'journal_id, name, issn, url, cas_partition, cas_major_category, cas_minor_category, subfield, rating_system, rating, review_cycle, acceptance_difficulty, h_index, cite_score, jcr, impact_factor, best_scientists, documents')
         .order('journal_id', ascending: true);
 
-    if (response == null) {
-      throw Exception('Error in getAllJournalInfo: $response');
-    }
-
     return (response as List)
         .map((json) => JournalInfo.fromJson(json))
         .toList();
@@ -181,10 +165,6 @@ class DBService {
         .select(
         'journal_id, journal_name, issn, url, cas_partition, cas_major_category, cas_minor_category, subfield, rating_system, rating, review_cycle, acceptance_difficulty, h_index, cite_score, jcr, impact_factor, best_scientists, documents')
         .eq('journal_name', journalName);
-
-    if (response == null) {
-      throw Exception('Error in getJournalDetailByName: $response');
-    }
 
     final data = (response as List)
         .map((json) => JournalDetail.fromJson(json))
@@ -230,10 +210,6 @@ class DBService {
         .select(
         'ranking_id, journal_id, journal_name, issn, ranking_position, score')
         .order('ranking_position', ascending: true);
-
-    if (response == null) {
-      throw Exception('Error in getG2RJournalRankings: $response');
-    }
 
     return (response as List)
         .map((json) => G2RJournalRanking.fromJson(json))
