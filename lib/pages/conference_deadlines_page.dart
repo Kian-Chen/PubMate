@@ -85,29 +85,6 @@ class _ConferenceDeadlinesPageState extends State<ConferenceDeadlinesPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Conference Deadlines'),
-        actions: [
-          // Dropdown to select evaluation mechanism
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DropdownButton<String>(
-              value: _selectedEvaluation,
-              icon: const Icon(Icons.filter_list),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedEvaluation = newValue!;
-                  _selectedRatings.clear(); // Clear previous selected ratings when evaluation changes
-                  _filterConferences(_searchQuery); // Re-filter after selection change
-                });
-              },
-              items: evaluationOptions.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [
